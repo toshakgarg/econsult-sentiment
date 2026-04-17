@@ -1,8 +1,10 @@
+import React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import {
   downloadExcelReport,
+  downloadPdfReport,
   getAnalysisBatch,
   runAnalysis,
 } from '../services/api'
@@ -72,7 +74,7 @@ function Analysis() {
     }
   }
 
-  const handleExport = async () => {
+  const handleExportExcel = async () => {
     if (!batch?.batch_id) {
       return
     }
@@ -84,6 +86,27 @@ function Analysis() {
       const link = document.createElement('a')
       link.href = url
       link.download = `econ_sentiment_report_${batch.batch_id}.xlsx`
+      link.click()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      setError(err?.response?.data?.detail || err?.message || 'Export failed.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleExportPdf = async () => {
+    if (!batch?.batch_id) {
+      return
+    }
+    setIsLoading(true)
+    setError('')
+    try {
+      const blob = await downloadPdfReport(batch.batch_id)
+      const url = window.URL.createObjectURL(new Blob([blob]))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `econ_sentiment_report_${batch.batch_id}.pdf`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -121,11 +144,19 @@ function Analysis() {
             </button>
             <button
               type="button"
-              onClick={handleExport}
+              onClick={handleExportExcel}
               disabled={!batch?.batch_id || isLoading}
               className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-emerald-400"
             >
               Export Excel
+            </button>
+            <button
+              type="button"
+              onClick={handleExportPdf}
+              disabled={!batch?.batch_id || isLoading}
+              className="rounded-md bg-indigo-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-800 disabled:cursor-not-allowed disabled:bg-indigo-400"
+            >
+              Export PDF
             </button>
           </div>
         </div>

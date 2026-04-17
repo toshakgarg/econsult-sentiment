@@ -1,6 +1,11 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { downloadExcelReport, getAnalysisHistory } from '../services/api'
+import {
+  downloadExcelReport,
+  downloadPdfReport,
+  getAnalysisHistory,
+} from '../services/api'
 
 function History() {
   const navigate = useNavigate()
@@ -32,6 +37,20 @@ function History() {
       const link = document.createElement('a')
       link.href = url
       link.download = `econ_sentiment_report_${batchId}.xlsx`
+      link.click()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      setError(err?.response?.data?.detail || err?.message || 'Export failed.')
+    }
+  }
+
+  const handleExportPdf = async (batchId) => {
+    try {
+      const blob = await downloadPdfReport(batchId)
+      const url = window.URL.createObjectURL(new Blob([blob]))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `econ_sentiment_report_${batchId}.pdf`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -114,7 +133,14 @@ function History() {
                           onClick={() => handleExport(item.batch_id)}
                           className="rounded bg-emerald-700 px-3 py-1 text-xs font-medium text-white hover:bg-emerald-800"
                         >
-                          Export
+                          Excel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleExportPdf(item.batch_id)}
+                          className="rounded bg-indigo-700 px-3 py-1 text-xs font-medium text-white hover:bg-indigo-800"
+                        >
+                          PDF
                         </button>
                       </div>
                     </td>

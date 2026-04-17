@@ -10,7 +10,7 @@ AI-powered Sentiment Analysis web application for MCA (Ministry of Corporate Aff
 - Word cloud generation on backend using Python **wordcloud** library (returned as base64 PNG)
 - Dashboard with sentiment visualizations (Recharts)
 - Analysis history storage in MongoDB Atlas
-- Excel report export for each analysis batch
+- Excel and PDF report export for each analysis batch
 - Appwrite-based login and protected routes
 
 ## Tech Stack
@@ -94,6 +94,22 @@ npm run dev
 
 Frontend will run at: `http://localhost:5173`
 
+## Run Backend Tests
+
+```powershell
+cd backend
+.\venv\Scripts\Activate.ps1
+python -m unittest discover -s tests -p "test_*.py"
+```
+
+## Run Frontend Smoke Tests
+
+```powershell
+cd frontend
+npm install
+npm run test
+```
+
 ## API Endpoints
 
 - `POST /api/upload/` - Upload CSV/Excel and validate required columns
@@ -101,6 +117,7 @@ Frontend will run at: `http://localhost:5173`
 - `GET /api/history/` - Retrieve past analysis batches
 - `GET /api/history/{batch_id}` - Retrieve specific batch details
 - `GET /api/history/{batch_id}/export/excel` - Download Excel report
+- `GET /api/history/{batch_id}/export/pdf` - Download PDF report
 - `GET /health` - Health check
 
 ## CI/CD Secrets Required

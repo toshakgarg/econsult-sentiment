@@ -35,3 +35,10 @@ export const downloadExcelReport = async (batchId) => {
   })
   return response.data
 }
+
+export const downloadPdfReport = async (batchId) => {
+  const response = await apiClient.get(`/history/${batchId}/export/pdf`, {
+    responseType: 'blob',
+  })
+  return response.data
+}
