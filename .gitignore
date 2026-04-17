@@ -3,3 +3,7 @@ backend/venv/
 backend/.env
 __pycache__/
 *.pyc
+frontend/dist/
+frontend/dist-ssr/
+frontend/.env.local
+.DS_Store

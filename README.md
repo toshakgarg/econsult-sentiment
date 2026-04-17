@@ -67,7 +67,7 @@ CORS_ALLOWED_ORIGINS=https://<optional-extra-origin-1>,https://<optional-extra-o
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
-VITE_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+VITE_APPWRITE_ENDPOINT=https://sgp.cloud.appwrite.io/v1
 VITE_APPWRITE_PROJECT_ID=<your-appwrite-project-id>
 ```
 
@@ -113,9 +113,14 @@ Frontend will run at: `http://localhost:5173`
 ### Frontend Workflow (`deploy-frontend.yml`)
 
 - `AZURE_STATIC_WEB_APPS_API_TOKEN`
+- `VITE_API_BASE_URL` (e.g. `https://<your-backend-app>.azurewebsites.net/api`)
+- `VITE_APPWRITE_ENDPOINT` (e.g. `https://sgp.cloud.appwrite.io/v1`)
+- `VITE_APPWRITE_PROJECT_ID`
 
 ## Notes
 
 - Word cloud is generated on Python backend and sent to frontend as base64 PNG.
 - Do not store API keys in frontend code.
 - Use `dataset/mock_comments.csv` for local testing.
+- The backend startup command for Azure App Service is in `backend/startup.txt`.
+- Azure Static Web Apps SPA routing is configured in `frontend/public/staticwebapp.config.json`.
