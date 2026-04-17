@@ -1,0 +1,51 @@
+comment_id,stakeholder_type,provision_no,comment_text,date
+CMT001,Industry Association,Sec 149(1),"The proposed timeline for compliance filing is practical and should improve consistency across companies.",2026-01-03
+CMT002,Startup Founder,Rule 8A,"The penalty slabs are too high for early-stage startups with limited cash flow.",2026-01-04
+CMT003,Chartered Accountant,Sec 92(3),"The amendment clarifies annual return disclosures and reduces interpretation disputes.",2026-01-05
+CMT004,Legal Expert,Sec 135(5),"CSR reporting templates are still ambiguous and need clearer field definitions.",2026-01-06
+CMT005,Company Secretary,Rule 12,"Allowing digital board records is a welcome modernization step.",2026-01-06
+CMT006,MSME Owner,Sec 164(2),"Automatic director disqualification for minor delays appears disproportionate.",2026-01-07
+CMT007,Investor Group,Sec 177,"Audit committee disclosure requirements are balanced and investor-friendly.",2026-01-07
+CMT008,Law Firm,Rule 14,"The draft does not specify treatment for legacy filings and this creates uncertainty.",2026-01-08
+CMT009,NGO Representative,Sec 188,"Related party transaction transparency has improved in this draft.",2026-01-08
+CMT010,Public Policy Analyst,Rule 19,"Please provide an official illustration for threshold computation to avoid confusion.",2026-01-09
+CMT011,Company Secretary,Sec 203,"The revised KMP appointment window is reasonable for large listed entities.",2026-01-09
+CMT012,Startup Founder,Rule 27,"Mandatory physical verification every quarter will increase unnecessary overhead.",2026-01-10
+CMT013,Industry Association,Sec 123,"Dividend declaration rules are now easier to interpret and apply.",2026-01-10
+CMT014,Chartered Accountant,Rule 31,"The reporting schedule overlaps with tax audit deadlines and may burden firms.",2026-01-11
+CMT015,Legal Expert,Sec 134,"Board report simplification is a positive step for governance efficiency.",2026-01-11
+CMT016,MSME Owner,Rule 9,"A shorter transition period may make compliance difficult for rural enterprises.",2026-01-12
+CMT017,Investor Group,Sec 245,"Class action safeguards are strengthened and this is appreciated.",2026-01-12
+CMT018,Law Firm,Rule 6,"Definitions for beneficial ownership still need alignment with existing circulars.",2026-01-13
+CMT019,NGO Representative,Sec 166,"Director accountability language is clearer than the previous draft.",2026-01-13
+CMT020,Public Policy Analyst,Rule 25,"Kindly release bilingual guidance notes for wider stakeholder understanding.",2026-01-14
+CMT021,Company Secretary,Sec 118,"Electronic minute book provisions are useful and implementation-ready.",2026-01-14
+CMT022,Startup Founder,Sec 56,"Share transfer documentation requirements remain excessively detailed for small firms.",2026-01-15
+CMT023,Industry Association,Rule 21,"The revised filing portal integration proposal is practical and timely.",2026-01-15
+CMT024,Chartered Accountant,Sec 129,"Consolidated statement rules are good but examples for LLP subsidiaries are missing.",2026-01-16
+CMT025,Legal Expert,Sec 447,"Penalty interpretation is stricter than necessary and may trigger avoidable litigation.",2026-01-16
+CMT026,MSME Owner,Rule 17,"Exemptions for low turnover entities are thoughtful and should be retained.",2026-01-17
+CMT027,Investor Group,Sec 62,"Rights issue disclosure enhancements will improve minority investor confidence.",2026-01-17
+CMT028,Law Firm,Rule 30,"Clarify whether historical defaults affect eligibility under the new framework.",2026-01-18
+CMT029,NGO Representative,Sec 12,"Registered office verification process is now more transparent and fair.",2026-01-18
+CMT030,Public Policy Analyst,Sec 73,"Deposit acceptance limits should be explained with a simple comparative table.",2026-01-19
+CMT031,Company Secretary,Rule 3,"The standardized e-forms can reduce clerical errors significantly.",2026-01-19
+CMT032,Startup Founder,Sec 185,"Restrictions on inter-corporate lending are too rigid for innovation ecosystems.",2026-01-20
+CMT033,Industry Association,Sec 148,"Cost audit rationalization is appreciated by manufacturing members.",2026-01-20
+CMT034,Chartered Accountant,Rule 11,"Additional annexure requirements may increase compliance time without clear benefit.",2026-01-21
+CMT035,Legal Expert,Sec 241,"The grievance redress mechanism appears stronger and more accessible.",2026-01-21
+CMT036,MSME Owner,Rule 22,"Please clarify if one-time delayed filings qualify for waiver under this rule.",2026-01-22
+CMT037,Investor Group,Sec 90,"Significant beneficial owner provisions now reflect global best practices.",2026-01-22
+CMT038,Law Firm,Sec 96,"Annual general meeting extension criteria should be explicitly listed.",2026-01-23
+CMT039,NGO Representative,Rule 4,"The consultation window should be extended by at least two additional weeks.",2026-01-23
+CMT040,Public Policy Analyst,Sec 101,"Notice period adjustments are balanced and should improve participation.",2026-01-24
+CMT041,Company Secretary,Sec 137,"Financial statement filing simplification is very useful for compliance teams.",2026-01-24
+CMT042,Startup Founder,Rule 16,"Mandatory third-party certification at every stage is cost-intensive.",2026-01-25
+CMT043,Industry Association,Sec 152,"Director appointment disclosures are clearer and aligned with governance goals.",2026-01-25
+CMT044,Chartered Accountant,Rule 28,"Clarification is required on applicability for government-owned companies.",2026-01-26
+CMT045,Legal Expert,Sec 186,"Loan and guarantee ceilings should allow board-approved flexibility.",2026-01-26
+CMT046,MSME Owner,Sec 455,"Dormant company process is easier now and the digital flow is welcome.",2026-01-27
+CMT047,Investor Group,Rule 10,"Quarterly disclosure cadence appears appropriate for market transparency.",2026-01-27
+CMT048,Law Firm,Sec 117,"Certain filing triggers are duplicated across forms and should be consolidated.",2026-01-28
+CMT049,NGO Representative,Rule 5,"The draft promotes accountability and should improve public trust.",2026-01-28
+CMT050,Public Policy Analyst,Sec 179,"Please issue implementation FAQs before enforcement to reduce avoidable errors.",2026-01-29

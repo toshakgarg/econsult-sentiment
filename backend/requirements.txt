@@ -1,0 +1,11 @@
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+python-multipart==0.0.20
+pandas>=2.2.0,<2.4
+openpyxl==3.1.5
+pymongo==4.10.1
+python-dotenv==1.1.0
+requests==2.32.3
+wordcloud==1.9.6
+nltk==3.9.1
+langdetect==1.0.9
