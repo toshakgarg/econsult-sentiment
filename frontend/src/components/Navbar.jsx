@@ -1,54 +1,92 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { LogOut, UserCircle } from 'lucide-react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import logo from '../assets/images/logo.png'
 
-const linkClassName = ({ isActive }) =>
-  `rounded-md px-3 py-2 text-sm font-medium transition ${
+const publicLinkClass = ({ isActive }) =>
+  `font-medium transition-colors ${isActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`
+
+const privateLinkClass = ({ isActive }) =>
+  `rounded-lg px-3 py-2 text-sm font-medium transition ${
     isActive
-      ? 'bg-blue-700 text-white'
-      : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+      ? 'bg-primary text-on-primary'
+      : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
   }`
 
-function Navbar({ user, onLogout }) {
+function Navbar({ user, onLogout, isAuthenticated = false }) {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = async () => {
     await onLogout()
     navigate('/login', { replace: true })
   }
 
+  const handleFeaturesClick = () => {
+    if (location.pathname === '/') {
+      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    navigate('/#features')
+  }
+
   return (
-    <header className="border-b border-slate-200 bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-slate-500">
-              Ministry of Corporate Affairs
-            </p>
-            <h1 className="text-lg font-semibold text-slate-900">eCon-Sentiment</h1>
-          </div>
-          <nav className="flex items-center gap-1">
-            <NavLink to="/" className={linkClassName}>
-              Home
-            </NavLink>
-            <NavLink to="/analysis" className={linkClassName}>
-              Analysis
-            </NavLink>
-            <NavLink to="/history" className={linkClassName}>
-              History
-            </NavLink>
-          </nav>
-        </div>
+    <header className="sticky top-0 z-50 border-b border-outline-variant/20 bg-surface/80 backdrop-blur-lg">
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <span className="hidden text-sm text-slate-600 sm:inline">
-            {user?.name || user?.email || 'Authenticated User'}
-          </span>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-md bg-slate-800 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
-          >
-            Logout
-          </button>
+          <img src={logo} alt="eCon-Sentiment logo" className="h-8 w-8 rounded-md" />
+          <span className="text-xl font-bold tracking-tighter text-primary">eCon-Sentiment</span>
         </div>
+
+        {isAuthenticated ? (
+          <div className="flex items-center gap-4">
+            <nav className="hidden items-center gap-2 md:flex">
+              <NavLink to="/home" className={privateLinkClass}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/history" className={privateLinkClass}>
+                History
+              </NavLink>
+            </nav>
+            <div className="hidden items-center gap-2 rounded-full bg-surface-container-low px-3 py-1.5 sm:flex">
+              <UserCircle className="h-5 w-5 text-outline" />
+              <span className="text-sm text-on-surface-variant">
+                {user?.name || user?.email || 'Authenticated User'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/30 px-3 py-2 text-sm font-medium text-on-surface transition hover:bg-surface-container-low"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-5">
+            <nav className="hidden items-center gap-8 md:flex">
+              <NavLink to="/" className={publicLinkClass}>
+                Home
+              </NavLink>
+              <NavLink to="/about" className={publicLinkClass}>
+                About
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleFeaturesClick}
+                className="font-medium text-on-surface-variant transition-colors hover:text-primary"
+              >
+                Features
+              </button>
+            </nav>
+            <Link
+              to="/login"
+              className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
+            >
+              Login
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   )

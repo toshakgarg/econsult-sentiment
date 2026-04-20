@@ -3,6 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { getCurrentUser, logoutUser } from './services/appwrite'
 
+const Landing = lazy(() => import('./pages/Landing'))
+const About = lazy(() => import('./pages/About'))
 const Login = lazy(() => import('./pages/Login'))
 const Home = lazy(() => import('./pages/Home'))
 const Analysis = lazy(() => import('./pages/Analysis'))
@@ -14,9 +16,18 @@ function ProtectedRoute({ user, onLogout, children }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      <Navbar user={user} onLogout={onLogout} />
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+    <div className="min-h-screen bg-surface">
+      <Navbar isAuthenticated user={user} onLogout={onLogout} />
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+    </div>
+  )
+}
+
+function PublicLayout({ children }) {
+  return (
+    <div className="min-h-screen bg-surface">
+      <Navbar />
+      {children}
     </div>
   )
 }
@@ -47,8 +58,8 @@ function App() {
 
   if (isAuthLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <div className="rounded-lg border border-slate-200 bg-white px-6 py-4 text-sm text-slate-600 shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="rounded-lg border border-outline-variant/20 bg-white px-6 py-4 text-sm text-on-surface-variant shadow-sm">
           Loading application...
         </div>
       </div>
@@ -59,8 +70,8 @@ function App() {
     <BrowserRouter>
       <Suspense
         fallback={
-          <div className="flex min-h-screen items-center justify-center bg-slate-100">
-            <div className="rounded-lg border border-slate-200 bg-white px-6 py-4 text-sm text-slate-600 shadow-sm">
+          <div className="flex min-h-screen items-center justify-center bg-surface">
+            <div className="rounded-lg border border-outline-variant/20 bg-white px-6 py-4 text-sm text-on-surface-variant shadow-sm">
               Loading page...
             </div>
           </div>
@@ -68,11 +79,27 @@ function App() {
       >
         <Routes>
           <Route
-            path="/login"
-            element={user ? <Navigate to="/" replace /> : <Login onLogin={setUser} />}
+            path="/"
+            element={
+              <PublicLayout>
+                <Landing />
+              </PublicLayout>
+            }
           />
           <Route
-            path="/"
+            path="/about"
+            element={
+              <PublicLayout>
+                <About />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/home" replace /> : <Login onLogin={setUser} />}
+          />
+          <Route
+            path="/home"
             element={
               <ProtectedRoute user={user} onLogout={handleLogout}>
                 <Home />
@@ -95,7 +122,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to={user ? '/' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to={user ? '/home' : '/'} replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

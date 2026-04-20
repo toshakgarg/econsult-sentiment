@@ -1,7 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply m-0 bg-slate-100 text-slate-800 antialiased;
+  @apply m-0 bg-surface font-sans text-on-surface antialiased;
+}
+
+.insight-rail {
+  border-left: 4px solid #004ac6;
 }
