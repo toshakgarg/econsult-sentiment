@@ -11,3 +11,4 @@ httpx==0.28.1
 wordcloud==1.9.6
 nltk==3.9.1
 langdetect==1.0.9
+gunicorn
