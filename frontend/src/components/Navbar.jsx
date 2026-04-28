@@ -32,15 +32,25 @@ function Navbar({ user, onLogout, isAuthenticated = false }) {
   return (
     <header className="sticky top-0 z-50 border-b border-outline-variant/20 bg-surface/80 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="eCon-Sentiment logo" className="h-8 w-8 rounded-md" />
-          <span className="text-xl font-bold tracking-tighter text-primary">eCon-Sentiment</span>
-        </div>
+       <Link to="/" className="flex items-center gap-3">
+        <img src={logo} alt="eCon-Sentiment logo" className="h-8 w-8 rounded-md" />
+        <span className="text-xl font-bold tracking-tighter text-primary">
+          eCon-Sentiment
+        </span>
+      </Link>
 
-        {isAuthenticated ? (
+      {
+        isAuthenticated ? 
+        (
           <div className="flex items-center gap-4">
             <nav className="hidden items-center gap-2 md:flex">
+              <NavLink to="/#" className={privateLinkClass}>
+                Home
+              </NavLink>
               <NavLink to="/home" className={privateLinkClass}>
+                Upload
+              </NavLink>
+              <NavLink to="/analysis" className={privateLinkClass}>
                 Dashboard
               </NavLink>
               <NavLink to="/history" className={privateLinkClass}>
@@ -62,7 +72,8 @@ function Navbar({ user, onLogout, isAuthenticated = false }) {
               Logout
             </button>
           </div>
-        ) : (
+        ) : 
+        (
           <div className="flex items-center gap-5">
             <nav className="hidden items-center gap-8 md:flex">
               <NavLink to="/" className={publicLinkClass}>

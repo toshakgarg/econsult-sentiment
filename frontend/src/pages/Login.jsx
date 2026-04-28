@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { BarChart3, Eye, LineChart, ShieldCheck } from 'lucide-react'
 import { loginWithEmail } from '../services/appwrite'
 import heroIllustration from '../assets/images/hero-illustration.png'
@@ -39,10 +39,12 @@ function Login({ onLogin }) {
           <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-secondary opacity-20 blur-3xl" />
 
           <div className="relative z-10">
-            <div className="mb-10 flex items-center gap-3">
+            <Link to="/" className="mb-10 flex items-center gap-3 cursor-pointer">
               <img src={logo} alt="eCon-Sentiment logo" className="h-10 w-10 rounded-lg" />
-              <h1 className="text-3xl font-extrabold tracking-tighter">eCon-Sentiment</h1>
-            </div>
+              <h1 className="text-3xl font-extrabold tracking-tighter">
+                eCon-Sentiment
+              </h1>
+            </Link>
             <h2 className="mb-6 text-5xl font-bold leading-tight tracking-tight">
               Precise economic intelligence through analytical clarity.
             </h2>

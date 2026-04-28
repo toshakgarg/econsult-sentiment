@@ -64,7 +64,7 @@ function About() {
       </section>
 
       <section className="mx-auto max-w-screen-2xl px-6 py-20 lg:px-8">
-        <h2 className="mb-14 text-center text-xs font-bold uppercase tracking-[0.2em] text-primary">
+        <h2 className="mb-14 text-center text-xl font-bold uppercase tracking-[0.2em] text-primary">
           Our Approach
         </h2>
         <div className="grid grid-cols-1 gap-1 md:grid-cols-3">
@@ -155,7 +155,12 @@ function About() {
           <div className="hidden h-px flex-1 bg-outline-variant/20 md:block" />
         </div>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <article className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8">
+          <a 
+            href="https://portfolio-beta-lake-20.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8 hover:shadow-lg transition"
+          >
             <img
               src={teamToshak}
               alt="Toshak Garg"
@@ -169,8 +174,13 @@ function About() {
                 workflows.
               </p>
             </div>
-          </article>
-          <article className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8">
+          </a>
+          <a 
+            href="https://divyambhalotia.tech" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8 hover:shadow-lg transition"
+          >
             <img
               src={teamDivyam}
               alt="Divyam"
@@ -183,7 +193,7 @@ function About() {
                 Crafts intuitive interaction patterns and visual systems for clear data storytelling.
               </p>
             </div>
-          </article>
+          </a>
         </div>
       </section>
     </main>
