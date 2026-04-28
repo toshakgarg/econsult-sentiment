@@ -156,7 +156,7 @@ function About() {
         </div>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <a 
-            href="https://portfolio-beta-lake-20.vercel.app/" 
+            href="https://toshakgarg.vercel.app" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8 hover:shadow-lg transition"
