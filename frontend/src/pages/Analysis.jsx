@@ -86,7 +86,7 @@ function Analysis() {
       const url = window.URL.createObjectURL(new Blob([blob]))
       const link = document.createElement('a')
       link.href = url
-      link.download = `econ_sentiment_report_${batch.batch_id}.xlsx`
+      link.download = `sentrix_report_${batch.batch_id}.xlsx`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -107,7 +107,7 @@ function Analysis() {
       const url = window.URL.createObjectURL(new Blob([blob]))
       const link = document.createElement('a')
       link.href = url
-      link.download = `econ_sentiment_report_${batch.batch_id}.pdf`
+      link.download = `sentrix_report_${batch.batch_id}.pdf`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -118,31 +118,31 @@ function Analysis() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6 shadow-sm">
+    <div className="space-y-6 sm:space-y-8">
+      <section className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 shadow-sm sm:p-6">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div className="space-y-1">
-            <h1 className="text-4xl font-extrabold tracking-tighter text-on-surface">
+            <h1 className="text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
               Analysis Results
             </h1>
-            <p className="font-medium text-on-surface-variant">
+            <p className="break-all text-sm font-medium text-on-surface-variant sm:text-base">
               Batch ID:{' '}
               <span className="font-bold text-primary">{batch?.batch_id || 'Not generated yet'}</span>
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:w-auto lg:flex lg:flex-wrap">
             <input
               type="text"
               value={uploadId}
               onChange={(event) => setUploadId(event.target.value)}
               placeholder="Upload ID"
-              className="rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-2 text-sm outline-none focus:border-primary"
             />
             <button
               type="button"
               onClick={handleRunAnalysis}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Sparkles className="h-4 w-4" />
               {isLoading ? 'Processing...' : 'Run Analysis'}
@@ -151,7 +151,7 @@ function Analysis() {
               type="button"
               onClick={handleExportExcel}
               disabled={!batch?.batch_id || isLoading}
-              className="inline-flex items-center gap-2 rounded-lg border border-secondary px-4 py-2.5 text-sm font-semibold text-secondary transition-colors hover:bg-secondary/10 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-secondary px-4 py-2.5 text-sm font-semibold text-secondary transition-colors hover:bg-secondary/10 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <FileSpreadsheet className="h-4 w-4" />
               Export Excel
@@ -160,7 +160,7 @@ function Analysis() {
               type="button"
               onClick={handleExportPdf}
               disabled={!batch?.batch_id || isLoading}
-              className="inline-flex items-center gap-2 rounded-lg border border-red-600 px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-600 px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <FileText className="h-4 w-4" />
               Export PDF
@@ -177,34 +177,34 @@ function Analysis() {
       {batch ? (
         <>
           <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <article className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6">
+            <article className="space-y-3 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:space-y-4 sm:p-6">
               <p className="text-xs font-bold uppercase tracking-widest text-outline">Total Records</p>
-              <p className="text-4xl font-extrabold text-on-surface">{batch.total_comments || 0}</p>
+              <p className="text-3xl font-extrabold text-on-surface sm:text-4xl">{batch.total_comments || 0}</p>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
                 <div className="h-full w-full bg-primary" />
               </div>
             </article>
-            <article className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6">
+            <article className="space-y-3 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:space-y-4 sm:p-6">
               <p className="text-xs font-bold uppercase tracking-widest text-outline">Positive</p>
-              <p className="text-4xl font-extrabold text-green-600">
+              <p className="text-3xl font-extrabold text-green-600 sm:text-4xl">
                 {batch.sentiment_counts?.positive ?? 0}
               </p>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
                 <div className="h-full bg-green-500" style={{ width: '58%' }} />
               </div>
             </article>
-            <article className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6">
+            <article className="space-y-3 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:space-y-4 sm:p-6">
               <p className="text-xs font-bold uppercase tracking-widest text-outline">Negative</p>
-              <p className="text-4xl font-extrabold text-red-600">
+              <p className="text-3xl font-extrabold text-red-600 sm:text-4xl">
                 {batch.sentiment_counts?.negative ?? 0}
               </p>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
                 <div className="h-full bg-red-500" style={{ width: '16%' }} />
               </div>
             </article>
-            <article className="space-y-4 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6">
+            <article className="space-y-3 rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:space-y-4 sm:p-6">
               <p className="text-xs font-bold uppercase tracking-widest text-outline">Neutral</p>
-              <p className="text-4xl font-extrabold text-slate-600">
+              <p className="text-3xl font-extrabold text-slate-600 sm:text-4xl">
                 {batch.sentiment_counts?.neutral ?? 0}
               </p>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
@@ -214,11 +214,11 @@ function Analysis() {
           </section>
 
           <section className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-8">
+            <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:p-8">
               <h3 className="mb-4 text-xl font-bold tracking-tight text-on-surface">
                 Sentiment Distribution
               </h3>
-              <div className="h-72">
+              <div className="h-64 sm:h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={110}>
@@ -235,7 +235,7 @@ function Analysis() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-8">
+            <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:p-8">
               <h3 className="mb-4 text-xl font-bold tracking-tight text-on-surface">
                 Keyword Frequency
               </h3>
@@ -249,7 +249,7 @@ function Analysis() {
 
           <section className="space-y-4">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <h3 className="self-start text-2xl font-extrabold tracking-tight text-on-surface md:self-center">
+              <h3 className="self-start text-xl font-extrabold tracking-tight text-on-surface sm:text-2xl md:self-center">
                 Comment-wise Analysis
               </h3>
               <div className="relative w-full md:w-96">
@@ -320,7 +320,7 @@ function Analysis() {
                 type="button"
                 onClick={handleExportExcel}
                 disabled={!batch?.batch_id || isLoading}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
               >
                 <Download className="h-4 w-4" />
                 Quick Export

@@ -19,7 +19,7 @@ def generate_excel_report(batch: Dict[str, Any]) -> bytes:
     summary_sheet = workbook.active
     summary_sheet.title = "Batch Summary"
 
-    summary_sheet["A1"] = "eCon-Sentiment Analysis Report"
+    summary_sheet["A1"] = "Sentrix Analysis Report"
     summary_sheet["A1"].font = Font(size=16, bold=True)
     summary_sheet.merge_cells("A1:B1")
 
@@ -105,7 +105,7 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
 
     def start_page() -> float:
         pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(margin, page_height - margin, "eCon-Sentiment Analysis Report")
+        pdf.drawString(margin, page_height - margin, "Sentrix Analysis Report")
         pdf.setFont("Helvetica", 9)
         pdf.drawRightString(
             page_width - margin, page_height - margin, f"Batch ID: {batch_id}"

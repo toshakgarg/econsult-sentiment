@@ -10,17 +10,17 @@ import teamToshak from '../assets/images/team-toshak.png'
 function About() {
   return (
     <main className="bg-surface text-on-surface">
-      <section className="mx-auto max-w-screen-2xl px-6 pb-16 pt-20 lg:px-8">
+      <section className="mx-auto max-w-screen-2xl px-4 pb-12 pt-12 sm:px-6 sm:pb-16 sm:pt-20 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
           <div className="md:col-span-8">
             <span className="mb-4 block text-xs font-bold uppercase tracking-[0.2em] text-primary">
               Analytical Intelligence
             </span>
-            <h1 className="mb-8 text-6xl font-extrabold leading-[1.1] tracking-tighter md:text-7xl">
+            <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight sm:mb-8 sm:text-6xl md:text-7xl">
               About <br />
-              eCon-Sentiment
+              Sentrix
             </h1>
-            <p className="max-w-2xl text-xl leading-relaxed text-on-surface-variant">
+            <p className="max-w-2xl text-base leading-relaxed text-on-surface-variant sm:text-xl">
               Transforming stakeholder feedback into a structured narrative through advanced
               language intelligence.
             </p>
@@ -28,16 +28,16 @@ function About() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-screen-2xl rounded-xl bg-surface-container-low px-6 py-20 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-16 md:grid-cols-2">
-          <div className="relative pl-8">
+      <section className="mx-auto max-w-screen-2xl bg-surface-container-low px-4 py-14 sm:rounded-xl sm:px-6 sm:py-20 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+          <div className="relative pl-5 sm:pl-8">
             <div className="absolute bottom-0 left-0 top-0 w-1 rounded-full bg-primary-container" />
             <h2 className="mb-6 text-3xl font-bold tracking-tight">Our Mission</h2>
-            <p className="mb-6 text-lg leading-relaxed text-on-surface-variant">
+            <p className="mb-6 text-base leading-relaxed text-on-surface-variant sm:text-lg">
               In an era of information overload, clarity is essential. We empower decision-makers
               by distilling stakeholder comments into a unified sentiment pulse.
             </p>
-            <p className="text-lg leading-relaxed text-on-surface-variant">
+            <p className="text-base leading-relaxed text-on-surface-variant sm:text-lg">
               By leveraging high-trust AI and transparent analytics, we reduce manual effort and
               improve policy insight quality.
             </p>
@@ -46,25 +46,25 @@ function About() {
             <img
               src={aboutIllustration}
               alt="Data mission illustration"
-              className="h-[400px] w-full rounded-xl object-cover shadow-xl"
+              className="h-64 w-full rounded-xl object-cover shadow-xl sm:h-[400px]"
             />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 text-center lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8">
         <div className="mb-8 inline-flex items-center justify-center rounded-full bg-error-container p-4 text-on-error-container">
           <AlertTriangle className="h-6 w-6" />
         </div>
-        <h2 className="mb-6 text-4xl font-extrabold tracking-tight">The Challenge</h2>
-        <p className="mx-auto max-w-3xl text-xl leading-relaxed text-on-surface-variant">
+        <h2 className="mb-6 text-3xl font-extrabold tracking-tight sm:text-4xl">The Challenge</h2>
+        <p className="mx-auto max-w-3xl text-base leading-relaxed text-on-surface-variant sm:text-xl">
           Traditional sentiment analysis often misses context. Analysts spend most of their time
           aggregating data, leaving limited bandwidth for strategic interpretation.
         </p>
       </section>
 
-      <section className="mx-auto max-w-screen-2xl px-6 py-20 lg:px-8">
-        <h2 className="mb-14 text-center text-xl font-bold uppercase tracking-[0.2em] text-primary">
+      <section className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <h2 className="mb-14 text-center text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Our Approach
         </h2>
         <div className="grid grid-cols-1 gap-1 md:grid-cols-3">
@@ -93,7 +93,7 @@ function About() {
           ].map((item) => (
             <article
               key={item.title}
-              className={`space-y-4 p-10 transition-colors duration-300 hover:bg-surface-container-highest ${item.color}`}
+              className={`space-y-4 p-6 transition-colors duration-300 hover:bg-surface-container-highest sm:p-10 ${item.color}`}
             >
               <span className="block text-4xl font-bold text-primary/20">{item.index}</span>
               <div className="text-primary">{item.icon}</div>
@@ -104,9 +104,9 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-surface-container-low px-6 py-20">
+      <section className="bg-surface-container-low px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-3xl font-bold">The Technology Stack</h2>
+          <h2 className="mb-10 text-2xl font-bold sm:mb-12 sm:text-3xl">The Technology Stack</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
@@ -130,7 +130,7 @@ function About() {
             ].map((tech) => (
               <article
                 key={tech.title}
-                className="rounded-lg border border-outline-variant/10 bg-white p-8 shadow-sm"
+                className="rounded-lg border border-outline-variant/10 bg-white p-6 shadow-sm sm:p-8"
               >
                 <img src={tech.logo} alt={`${tech.title} logo`} className="mb-6 h-10 w-auto" />
                 <span className="mb-3 block text-[0.6875rem] font-bold uppercase tracking-widest text-primary">
@@ -144,27 +144,22 @@ function About() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-screen-2xl px-6 py-20 lg:px-8">
+      <section className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="mb-16 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <h2 className="text-5xl font-extrabold tracking-tighter">The Visionaries</h2>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl">The Visionaries</h2>
             <p className="mt-4 max-w-md text-on-surface-variant">
-              The team shaping eCon-Sentiment’s engineering and user experience.
+              The team shaping Sentrix's engineering and user experience.
             </p>
           </div>
           <div className="hidden h-px flex-1 bg-outline-variant/20 md:block" />
         </div>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <a 
-            href="https://toshakgarg.vercel.app" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8 hover:shadow-lg transition"
-          >
+          <article className="flex flex-col items-start gap-5 rounded-xl bg-surface-container-low p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
             <img
               src={teamToshak}
               alt="Toshak Garg"
-              className="h-32 w-32 rounded-full object-cover shadow-lg"
+              className="h-24 w-24 rounded-full object-cover shadow-lg sm:h-32 sm:w-32"
             />
             <div>
               <h3 className="text-2xl font-bold">Toshak Garg</h3>
@@ -174,17 +169,12 @@ function About() {
                 workflows.
               </p>
             </div>
-          </a>
-          <a 
-            href="https://divyambhalotia.tech" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-8 rounded-xl bg-surface-container-low p-8 hover:shadow-lg transition"
-          >
+          </article>
+          <article className="flex flex-col items-start gap-5 rounded-xl bg-surface-container-low p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
             <img
               src={teamDivyam}
               alt="Divyam"
-              className="h-32 w-32 rounded-full object-cover shadow-lg"
+              className="h-24 w-24 rounded-full object-cover shadow-lg sm:h-32 sm:w-32"
             />
             <div>
               <h3 className="text-2xl font-bold">Divyam</h3>
@@ -193,7 +183,7 @@ function About() {
                 Crafts intuitive interaction patterns and visual systems for clear data storytelling.
               </p>
             </div>
-          </a>
+          </article>
         </div>
       </section>
     </main>

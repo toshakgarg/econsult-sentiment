@@ -1,4 +1,4 @@
-# eCon-Sentiment
+# Sentrix
 
 AI-powered Sentiment Analysis web application for MCA (Ministry of Corporate Affairs), Government of India eConsultation comments.
 

@@ -37,7 +37,7 @@ function History() {
       const url = window.URL.createObjectURL(new Blob([blob]))
       const link = document.createElement('a')
       link.href = url
-      link.download = `econ_sentiment_report_${batchId}.xlsx`
+      link.download = `sentrix_report_${batchId}.xlsx`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -51,7 +51,7 @@ function History() {
       const url = window.URL.createObjectURL(new Blob([blob]))
       const link = document.createElement('a')
       link.href = url
-      link.download = `econ_sentiment_report_${batchId}.pdf`
+      link.download = `sentrix_report_${batchId}.pdf`
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -60,23 +60,23 @@ function History() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <section className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <span className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-outline">
             Intelligence Log
           </span>
-          <h1 className="text-[2.75rem] font-extrabold leading-tight tracking-tighter text-on-surface">
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-on-surface sm:text-[2.75rem]">
             Analysis History
           </h1>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative">
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:w-auto">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
             <input
               type="text"
               placeholder="Search analyses..."
-              className="w-64 rounded-lg border-none bg-surface-container-low py-2 pl-10 text-sm text-on-surface transition-all focus:border-b-2 focus:border-primary focus:ring-0"
+              className="w-full rounded-lg border-none bg-surface-container-low py-2 pl-10 text-sm text-on-surface transition-all focus:border-b-2 focus:border-primary focus:ring-0"
             />
           </div>
           <div className="flex cursor-default items-center gap-2 rounded-lg bg-surface-container-low px-3 py-2 hover:bg-surface-container-high">
@@ -105,21 +105,21 @@ function History() {
           items.map((item) => (
             <article
               key={item.id || item.batch_id}
-              className="group flex flex-col items-center justify-between gap-6 rounded-xl border border-transparent bg-surface-container-lowest p-6 transition-all hover:border-outline-variant/15 hover:bg-surface-container-low md:flex-row"
+              className="group flex flex-col items-stretch justify-between gap-5 rounded-xl border border-transparent bg-surface-container-lowest p-4 transition-all hover:border-outline-variant/15 hover:bg-surface-container-low sm:p-6 md:flex-row md:items-center"
             >
-              <div className="flex w-full items-center gap-5 md:w-1/3">
+              <div className="flex w-full min-w-0 items-center gap-4 sm:gap-5 md:w-1/3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-fixed">
                   <FolderKanban className="h-5 w-5 text-on-primary-fixed" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold leading-snug text-on-surface">{item.batch_id}</h3>
+                <div className="min-w-0">
+                  <h3 className="break-all text-base font-bold leading-snug text-on-surface sm:text-lg">{item.batch_id}</h3>
                   <p className="text-sm font-medium text-outline">
                     {item.created_at ? new Date(item.created_at).toLocaleString() : '-'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex w-full flex-1 items-center justify-around rounded-xl bg-surface-container-low/50 px-6 py-3">
+              <div className="grid w-full flex-1 grid-cols-4 gap-2 rounded-xl bg-surface-container-low/50 px-3 py-3 sm:px-6">
                 <div className="text-center">
                   <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-outline">
                     Total
@@ -152,7 +152,7 @@ function History() {
                 </div>
               </div>
 
-              <div className="flex w-full items-center justify-end gap-2 md:w-auto">
+              <div className="grid w-full grid-cols-[1fr_auto_auto] items-center gap-2 md:w-auto">
                 <button
                   type="button"
                   onClick={() => navigate('/analysis', { state: { batchId: item.batch_id } })}
@@ -162,6 +162,7 @@ function History() {
                 </button>
                 <button
                   type="button"
+                  aria-label="Excel"
                   onClick={() => handleExport(item.batch_id)}
                   className="rounded-lg bg-surface-container-high p-2.5 text-on-surface transition-colors hover:bg-outline-variant"
                 >
@@ -169,6 +170,7 @@ function History() {
                 </button>
                 <button
                   type="button"
+                  aria-label="PDF"
                   onClick={() => handleExportPdf(item.batch_id)}
                   className="rounded-lg bg-surface-container-high p-2.5 text-on-surface transition-colors hover:bg-outline-variant"
                 >

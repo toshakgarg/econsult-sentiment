@@ -30,8 +30,8 @@ function Landing() {
 
   return (
     <main className="bg-surface text-on-surface">
-      <section className="relative overflow-hidden pb-24 pt-20">
-        <div className="mx-auto grid max-w-screen-2xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
+      <section className="relative overflow-hidden pb-16 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20">
+        <div className="mx-auto grid max-w-screen-2xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
           <div className="z-10">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-surface-container-high px-3 py-1 text-xs font-bold uppercase tracking-widest text-on-surface-variant">
               <span className="relative flex h-2 w-2">
@@ -40,26 +40,26 @@ function Landing() {
               </span>
               Next-Gen Intelligence
             </div>
-            <h1 className="mb-6 text-5xl font-extrabold leading-[1.1] tracking-tighter md:text-6xl">
+            <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl">
               Analyze Thousands of <span className="text-primary">Comments</span> Instantly
               with AI
             </h1>
-            <p className="mb-10 max-w-xl text-lg leading-relaxed text-on-surface-variant">
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-on-surface-variant sm:mb-10 sm:text-lg">
               Upload your feedback data and get sentiment analysis, summaries, and visual
               insights in seconds.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
               <button
                 type="button"
                 onClick={() => navigate('/login')}
-                className="rounded-lg bg-primary px-8 py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
+                className="rounded-lg bg-primary px-6 py-3.5 text-base font-bold text-on-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] sm:px-8 sm:py-4 sm:text-lg"
               >
                 Get Started
               </button>
               <button
                 type="button"
                 onClick={handleScrollToHowItWorks}
-                className="flex items-center gap-2 rounded-lg bg-surface-container-high px-8 py-4 text-lg font-bold text-on-surface transition-colors hover:bg-surface-container-highest"
+                className="flex items-center justify-center gap-2 rounded-lg bg-surface-container-high px-6 py-3.5 text-base font-bold text-on-surface transition-colors hover:bg-surface-container-highest sm:px-8 sm:py-4 sm:text-lg"
               >
                 <PlayCircle className="h-5 w-5" />
                 See How It Works
@@ -69,7 +69,7 @@ function Landing() {
 
           <div className="relative">
             <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-            <div className="relative rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-2xl shadow-on-surface/5">
+            <div className="relative rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-3 shadow-2xl shadow-on-surface/5 sm:p-6">
               <img
                 src={heroIllustration}
                 alt="AI analysis dashboard preview"
@@ -104,10 +104,10 @@ function Landing() {
         </div>
       </section>
 
-      <section id="features" className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="features" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tighter">
+            <h2 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
               Everything You Need to Analyze Feedback
             </h2>
             <p className="text-on-surface-variant">
@@ -115,7 +115,7 @@ function Landing() {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-10 shadow-sm">
+            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-sm sm:p-10">
               <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-lg bg-secondary-container">
                 <img src={sentimentIcon} alt="Sentiment analysis icon" className="h-7 w-7" />
               </div>
@@ -124,7 +124,7 @@ function Landing() {
                 Detects nuanced positive, negative, and neutral signals with high precision.
               </p>
             </article>
-            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-10 shadow-sm">
+            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-sm sm:p-10">
               <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-fixed">
                 <img src={summaryIcon} alt="Smart summary icon" className="h-7 w-7" />
               </div>
@@ -133,7 +133,7 @@ function Landing() {
                 Condenses large response sets into concise and actionable insights.
               </p>
             </article>
-            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-10 shadow-sm">
+            <article className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-sm sm:p-10">
               <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-container-high">
                 <img src={wordcloudIcon} alt="Visual insights icon" className="h-7 w-7" />
               </div>
@@ -146,8 +146,8 @@ function Landing() {
         </div>
       </section>
 
-      <section id="how-it-works" className="bg-surface-container-low py-20 scroll-mt-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="how-it-works" className="scroll-mt-20 bg-surface-container-low py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-14 text-center text-3xl font-extrabold tracking-tighter">
             Get Insights in 3 Simple Steps
           </h2>
@@ -169,11 +169,11 @@ function Landing() {
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div className="max-w-xl">
-              <h2 className="mb-4 text-4xl font-extrabold tracking-tighter">
+              <h2 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 Built for Every Industry
               </h2>
               <p className="text-on-surface-variant">
@@ -188,7 +188,7 @@ function Landing() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
             {[
               ['Government', govtIcon],
               ['Corporate', corporateIcon],
@@ -202,7 +202,7 @@ function Landing() {
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-on-surface/90 to-transparent" />
-                <h5 className="absolute bottom-5 left-5 text-xl font-bold text-white">{label}</h5>
+                <h5 className="absolute bottom-4 left-4 text-lg font-bold text-white sm:bottom-5 sm:left-5 sm:text-xl">{label}</h5>
               </article>
             ))}
           </div>

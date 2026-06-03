@@ -32,7 +32,7 @@ def export_batch_excel(batch_id: str):
 
     report_bytes = generate_excel_report(batch)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    filename = f"econ_sentiment_report_{batch_id}_{timestamp}.xlsx"
+    filename = f"sentrix_report_{batch_id}_{timestamp}.xlsx"
     return StreamingResponse(
         BytesIO(report_bytes),
         media_type=(
@@ -50,7 +50,7 @@ def export_batch_pdf(batch_id: str):
 
     report_bytes = generate_pdf_report(batch)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    filename = f"econ_sentiment_report_{batch_id}_{timestamp}.pdf"
+    filename = f"sentrix_report_{batch_id}_{timestamp}.pdf"
     return StreamingResponse(
         BytesIO(report_bytes),
         media_type="application/pdf",

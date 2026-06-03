@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { BarChart3, Eye, LineChart, ShieldCheck } from 'lucide-react'
 import { loginWithEmail } from '../services/appwrite'
 import heroIllustration from '../assets/images/hero-illustration.png'
@@ -39,12 +39,10 @@ function Login({ onLogin }) {
           <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-secondary opacity-20 blur-3xl" />
 
           <div className="relative z-10">
-            <Link to="/" className="mb-10 flex items-center gap-3 cursor-pointer">
-              <img src={logo} alt="eCon-Sentiment logo" className="h-10 w-10 rounded-lg" />
-              <h1 className="text-3xl font-extrabold tracking-tighter">
-                eCon-Sentiment
-              </h1>
-            </Link>
+            <div className="mb-10 flex items-center gap-3">
+              <img src={logo} alt="Sentrix logo" className="h-10 w-10 rounded-lg" />
+              <h1 className="text-3xl font-extrabold tracking-tighter">Sentrix</h1>
+            </div>
             <h2 className="mb-6 text-5xl font-bold leading-tight tracking-tight">
               Precise economic intelligence through analytical clarity.
             </h2>
@@ -89,19 +87,19 @@ function Login({ onLogin }) {
           </div>
         </section>
 
-        <section className="flex w-full items-center justify-center bg-surface p-8 md:w-1/2 md:p-24">
+        <section className="flex w-full flex-1 items-center justify-center bg-surface px-4 py-8 sm:p-8 md:w-1/2 md:p-24">
           <div className="w-full max-w-md">
             <div className="mb-8 md:hidden">
               <div className="mb-6 flex items-center gap-3">
-                <img src={logo} alt="eCon-Sentiment logo" className="h-9 w-9 rounded-md" />
-                <h1 className="text-2xl font-bold tracking-tighter text-primary">
-                  eCon-Sentiment
+                <img src={logo} alt="Sentrix logo" className="h-9 w-9 rounded-md" />
+                <h1 className="text-2xl font-bold tracking-tight text-primary">
+                  Sentrix
                 </h1>
               </div>
             </div>
 
             <header className="mb-8">
-              <h2 className="mb-2 text-4xl font-extrabold tracking-tight text-on-surface">
+              <h2 className="mb-2 text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
                 Welcome Back
               </h2>
               <p className="font-medium text-on-surface-variant">
@@ -142,7 +140,7 @@ function Login({ onLogin }) {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     className="w-full border-0 bg-transparent px-0 py-4 text-on-surface placeholder:text-outline focus:ring-0"
-                    placeholder="••••••••"
+                    placeholder="Password"
                     required
                   />
                   <button type="button" className="pr-2 text-outline hover:text-primary">

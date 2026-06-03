@@ -69,12 +69,12 @@ function Home() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 sm:space-y-10">
       <section>
-        <h1 className="mb-2 text-[2.75rem] font-extrabold tracking-tighter text-on-surface">
+        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-on-surface sm:text-[2.75rem]">
           Upload Comments File
         </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+        <p className="max-w-2xl text-base leading-relaxed text-on-surface-variant sm:text-lg">
           Ingest stakeholder discourse and prepare datasets for sentiment extraction and
           provision-level intelligence.
         </p>
@@ -88,31 +88,31 @@ function Home() {
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold text-on-primary shadow-lg shadow-primary/20">
               1
             </div>
-            <span className="text-sm font-bold text-primary">Upload File</span>
+            <span className="text-center text-xs font-bold text-primary sm:text-sm">Upload File</span>
           </div>
           <div className="relative flex flex-col items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-highest font-bold text-outline">
               2
             </div>
-            <span className="text-sm font-medium text-outline">Run Analysis</span>
+            <span className="text-center text-xs font-medium text-outline sm:text-sm">Run Analysis</span>
           </div>
           <div className="relative flex flex-col items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-highest font-bold text-outline">
               3
             </div>
-            <span className="text-sm font-medium text-outline">View Results</span>
+            <span className="text-center text-xs font-medium text-outline sm:text-sm">View Results</span>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
-        <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-8 lg:col-span-7">
+      <section className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 sm:p-8 lg:col-span-7">
           <div
             onDragOver={onDragOver}
             onDragLeave={() => setIsDragging(false)}
             onDrop={onDrop}
             onClick={() => inputRef.current?.click()}
-            className={`flex aspect-[16/10] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
+            className={`flex min-h-72 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 text-center transition-colors sm:aspect-[16/10] sm:min-h-0 ${
               isDragging
                 ? 'border-primary bg-primary-fixed/30'
                 : 'border-outline-variant bg-surface hover:bg-surface-container-low'
@@ -125,11 +125,11 @@ function Home() {
               className="hidden"
               onChange={(event) => handleFileSelection(event.target.files?.[0] || null)}
             />
-            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary-fixed transition-transform duration-300 group-hover:scale-110">
-              <CloudUpload className="h-10 w-10 text-primary" />
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary-fixed transition-transform duration-300 group-hover:scale-110 sm:mb-6 sm:h-20 sm:w-20">
+              <CloudUpload className="h-8 w-8 text-primary sm:h-10 sm:w-10" />
             </div>
-            <h3 className="mb-2 text-xl font-bold tracking-tight">Drag and drop your file here</h3>
-            <p className="mb-6 font-medium text-on-surface-variant">
+            <h3 className="mb-2 text-lg font-bold tracking-tight sm:text-xl">Drag and drop your file here</h3>
+            <p className="mb-6 text-sm font-medium text-on-surface-variant sm:text-base">
               Supports CSV, XLSX and XLS formats
             </p>
             {selectedFile ? (
@@ -137,7 +137,7 @@ function Home() {
             ) : (
               <button
                 type="button"
-                className="rounded-lg bg-primary px-8 py-3 font-bold text-on-primary transition-all hover:shadow-xl hover:shadow-primary/20"
+                className="rounded-lg bg-primary px-6 py-3 font-bold text-on-primary transition-all hover:shadow-xl hover:shadow-primary/20 sm:px-8"
               >
                 Browse Files
               </button>
@@ -157,7 +157,7 @@ function Home() {
             </div>
           ) : null}
 
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               type="button"
               onClick={handleUpload}
@@ -186,7 +186,7 @@ function Home() {
               </span>
               <h2 className="text-xl font-bold tracking-tight">Required columns</h2>
             </div>
-            <div className="overflow-hidden rounded-xl bg-surface-container">
+            <div className="overflow-x-auto rounded-xl bg-surface-container">
               <table className="w-full border-collapse text-left">
                 <thead>
                   <tr className="border-b border-outline-variant/15 bg-surface-container-high">

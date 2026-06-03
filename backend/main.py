@@ -12,7 +12,7 @@ from routes.upload import router as upload_router
 load_dotenv()
 
 app = FastAPI(
-    title="eCon-Sentiment API",
+    title="Sentrix API",
     version="1.0.0",
     description=(
         "AI-powered sentiment analysis backend for MCA eConsultation comments."
@@ -47,4 +47,4 @@ app.include_router(history_router, prefix="/api/history", tags=["history"])
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "eCon-Sentiment API"}
+    return {"status": "ok", "service": "Sentrix API"}
