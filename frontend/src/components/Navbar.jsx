@@ -130,23 +130,27 @@ function Navbar({ user, onLogout, isAuthenticated = false }) {
         {isMobileMenuOpen ? (
           <div className="border-t border-outline-variant/20 bg-surface px-4 py-4 shadow-lg md:hidden">
             <nav className="mx-auto flex max-w-screen-2xl flex-col gap-2">
-              {(isAuthenticated ? authNavItems : publicNavItems).map(({ to, label, icon: Icon }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  onClick={closeMobileMenu}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold ${
-                      isActive
-                        ? 'bg-primary text-on-primary'
-                        : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
-                    }`
-                  }
-                >
-                  <Icon className="h-4 w-4" />
-                  {label}
-                </NavLink>
-              ))}
+              {(isAuthenticated ? authNavItems : publicNavItems).map((item) => {
+                const Icon = item.icon
+
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={closeMobileMenu}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold ${
+                        isActive
+                          ? 'bg-primary text-on-primary'
+                          : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'
+                      }`
+                    }
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                )
+              })}
               {!isAuthenticated ? (
                 <>
                   <button
@@ -184,20 +188,24 @@ function Navbar({ user, onLogout, isAuthenticated = false }) {
       {isAuthenticated ? (
         <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-outline-variant/25 bg-surface/95 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 shadow-[0_-8px_24px_rgba(21,28,39,0.08)] backdrop-blur md:hidden">
           <div className="mx-auto grid max-w-md grid-cols-3 gap-1">
-            {authNavItems.map(({ to, label, icon: Icon }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg text-xs font-bold ${
-                    isActive ? 'bg-primary-fixed text-primary' : 'text-on-surface-variant'
-                  }`
-                }
-              >
-                <Icon className="h-5 w-5" />
-                <span>{label}</span>
-              </NavLink>
-            ))}
+            {authNavItems.map((item) => {
+              const Icon = item.icon
+
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg text-xs font-bold ${
+                      isActive ? 'bg-primary-fixed text-primary' : 'text-on-surface-variant'
+                    }`
+                  }
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </NavLink>
+              )
+            })}
           </div>
         </nav>
       ) : null}

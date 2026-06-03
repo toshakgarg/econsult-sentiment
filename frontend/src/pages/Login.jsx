@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BarChart3, Eye, LineChart, ShieldCheck } from 'lucide-react'
+import { BarChart3, Eye, EyeOff, LineChart, ShieldCheck } from 'lucide-react'
 import { loginWithEmail } from '../services/appwrite'
 import heroIllustration from '../assets/images/hero-illustration.png'
 import logo from '../assets/images/logo.png'
@@ -10,8 +10,13 @@ function Login({ onLogin }) {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleBrandClick = () => {
+    navigate('/')
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -39,10 +44,15 @@ function Login({ onLogin }) {
           <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-secondary opacity-20 blur-3xl" />
 
           <div className="relative z-10">
-            <div className="mb-10 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleBrandClick}
+              className="mb-10 flex items-center gap-3 text-left transition hover:opacity-80"
+              aria-label="Go to Sentrix home"
+            >
               <img src={logo} alt="Sentrix logo" className="h-10 w-10 rounded-lg" />
-              <h1 className="text-3xl font-extrabold tracking-tighter">Sentrix</h1>
-            </div>
+              <span className="text-3xl font-extrabold tracking-tighter">Sentrix</span>
+            </button>
             <h2 className="mb-6 text-5xl font-bold leading-tight tracking-tight">
               Precise economic intelligence through analytical clarity.
             </h2>
@@ -90,12 +100,17 @@ function Login({ onLogin }) {
         <section className="flex w-full flex-1 items-center justify-center bg-surface px-4 py-8 sm:p-8 md:w-1/2 md:p-24">
           <div className="w-full max-w-md">
             <div className="mb-8 md:hidden">
-              <div className="mb-6 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleBrandClick}
+                className="mb-6 flex items-center gap-3 text-left transition hover:opacity-80"
+                aria-label="Go to Sentrix home"
+              >
                 <img src={logo} alt="Sentrix logo" className="h-9 w-9 rounded-md" />
-                <h1 className="text-2xl font-bold tracking-tight text-primary">
+                <span className="text-2xl font-bold tracking-tight text-primary">
                   Sentrix
-                </h1>
-              </div>
+                </span>
+              </button>
             </div>
 
             <header className="mb-8">
@@ -136,15 +151,25 @@ function Login({ onLogin }) {
                 <div className="flex items-center border-b-2 border-transparent bg-surface-container-low focus-within:border-primary">
                   <input
                     id="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     className="w-full border-0 bg-transparent px-0 py-4 text-on-surface placeholder:text-outline focus:ring-0"
                     placeholder="Password"
                     required
                   />
-                  <button type="button" className="pr-2 text-outline hover:text-primary">
-                    <Eye className="h-5 w-5" />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                    onClick={() => setShowPassword((isVisible) => !isVisible)}
+                    className="pr-2 text-outline hover:text-primary"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
