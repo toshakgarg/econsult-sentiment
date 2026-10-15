@@ -2,11 +2,12 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, model_validator
 
 from models.schemas import AnalysisResult, BatchResult, Comment, WordCloudResponse
 from services.azure_language import analyze_sentiment
+from services.auth import get_current_user_id
 from services.huggingface_service import generate_summary
 from services.mongodb_service import get_uploaded_comments, save_analysis_batch
 from services.wordcloud_service import generate_word_cloud_base64
@@ -28,10 +29,12 @@ class AnalysisRequest(BaseModel):
 
 
 @router.post("/", response_model=BatchResult)
-def run_analysis(request: AnalysisRequest):
+def run_analysis(
+    request: AnalysisRequest, owner_id: str = Depends(get_current_user_id)
+):
     source_comments: List[Dict[str, str]]
     if request.upload_id:
-        source_comments = get_uploaded_comments(request.upload_id) or []
+        source_comments = get_uploaded_comments(request.upload_id, owner_id) or []
         if not source_comments:
             raise HTTPException(
                 status_code=404,
@@ -108,7 +111,7 @@ def run_analysis(request: AnalysisRequest):
         "word_cloud": {"image_base64": word_cloud_base64},
         "results": [result.model_dump() for result in analyzed_results],
     }
-    save_analysis_batch(batch_payload)
+    save_analysis_batch(batch_payload, owner_id)
 
     return BatchResult(
         batch_id=batch_payload["batch_id"],

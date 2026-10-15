@@ -2,12 +2,14 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BarChart3, Eye, EyeOff, LineChart, ShieldCheck } from 'lucide-react'
-import { loginWithEmail } from '../services/appwrite'
+import { loginWithEmail, registerUser } from '../services/appwrite'
 import heroIllustration from '../assets/images/hero-illustration.png'
 import logo from '../assets/images/logo.png'
 
 function Login({ onLogin }) {
   const navigate = useNavigate()
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -23,7 +25,9 @@ function Login({ onLogin }) {
     setError('')
     setIsSubmitting(true)
     try {
-      const user = await loginWithEmail(email, password)
+      const user = isRegistering
+        ? await registerUser(name, email, password)
+        : await loginWithEmail(email, password)
       onLogin(user)
       navigate('/home', { replace: true })
     } catch (err) {
@@ -115,14 +119,37 @@ function Login({ onLogin }) {
 
             <header className="mb-8">
               <h2 className="mb-2 text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
-                Welcome Back
+                {isRegistering ? 'Create Your Account' : 'Welcome Back'}
               </h2>
               <p className="font-medium text-on-surface-variant">
-                Sign in to your account to continue.
+                {isRegistering
+                  ? 'Create your account to start using Sentrix.'
+                  : 'Sign in to your account to continue.'}
               </p>
             </header>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {isRegistering ? (
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-1 block text-xs font-bold uppercase tracking-widest text-outline"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    className="w-full rounded-none border-0 border-b-2 border-transparent bg-surface-container-low px-0 py-4 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0"
+                    placeholder="Your name"
+                    autoComplete="name"
+                    required
+                  />
+                </div>
+              ) : null}
+
               <div>
                 <label
                   htmlFor="email"
@@ -137,6 +164,7 @@ function Login({ onLogin }) {
                   onChange={(event) => setEmail(event.target.value)}
                   className="w-full rounded-none border-0 border-b-2 border-transparent bg-surface-container-low px-0 py-4 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0"
                   placeholder="name@company.com"
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -156,6 +184,8 @@ function Login({ onLogin }) {
                     onChange={(event) => setPassword(event.target.value)}
                     className="w-full border-0 bg-transparent px-0 py-4 text-on-surface placeholder:text-outline focus:ring-0"
                     placeholder="Password"
+                    autoComplete={isRegistering ? 'new-password' : 'current-password'}
+                    minLength={isRegistering ? 8 : undefined}
                     required
                   />
                   <button
@@ -185,9 +215,29 @@ function Login({ onLogin }) {
                 disabled={isSubmitting}
                 className="w-full rounded-lg bg-primary px-6 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isSubmitting ? 'Signing in...' : 'Sign In'}
+                {isSubmitting
+                  ? isRegistering
+                    ? 'Creating account...'
+                    : 'Signing in...'
+                  : isRegistering
+                    ? 'Create Account'
+                    : 'Sign In'}
               </button>
             </form>
+
+            <p className="mt-6 text-center text-sm text-on-surface-variant">
+              {isRegistering ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRegistering((isRegisteringMode) => !isRegisteringMode)
+                  setError('')
+                }}
+                className="font-bold text-primary hover:underline"
+              >
+                {isRegistering ? 'Sign in' : 'Create an account'}
+              </button>
+            </p>
           </div>
         </section>
       </div>

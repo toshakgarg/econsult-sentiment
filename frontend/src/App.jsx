@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { Suspense, cloneElement, lazy, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { getCurrentUser, logoutUser } from './services/appwrite'
@@ -19,7 +19,7 @@ function ProtectedRoute({ user, onLogout, children }) {
     <div className="min-h-screen bg-surface">
       <Navbar isAuthenticated user={user} onLogout={onLogout} />
       <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 sm:px-6 md:pb-8 md:pt-8 lg:px-8">
-        {children}
+        {cloneElement(children, { user })}
       </main>
     </div>
   )
@@ -55,6 +55,9 @@ function App() {
 
   const handleLogout = async () => {
     await logoutUser()
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith('lastUploadId:'))
+      .forEach((key) => localStorage.removeItem(key))
     setUser(null)
   }
 

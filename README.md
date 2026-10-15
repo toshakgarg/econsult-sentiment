@@ -59,6 +59,10 @@ HUGGINGFACE_MODEL_URL=https://api-inference.huggingface.co/models/facebook/bart-
 MONGODB_URI=<your-mongodb-atlas-connection-string>
 MONGODB_DB_NAME=econsult_sentiment
 
+# Backend Appwrite verification (use the same values as the frontend)
+APPWRITE_ENDPOINT=https://sgp.cloud.appwrite.io/v1
+APPWRITE_PROJECT_ID=<your-appwrite-project-id>
+
 FRONTEND_PROD_ORIGIN=https://<your-static-web-app>.azurestaticapps.net
 CORS_ALLOWED_ORIGINS=https://<optional-extra-origin-1>,https://<optional-extra-origin-2>
 ```

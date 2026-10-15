@@ -3,9 +3,11 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import pandas as pd
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from pymongo.errors import PyMongoError
 
 from services.mongodb_service import save_uploaded_comments
+from services.auth import get_current_user_id
 
 
 router = APIRouter()
@@ -32,7 +34,10 @@ def _normalize_record(record: Dict[str, Any]) -> Dict[str, str]:
 
 
 @router.post("/")
-async def upload_comments(file: UploadFile = File(...)):
+async def upload_comments(
+    file: UploadFile = File(...),
+    owner_id: str = Depends(get_current_user_id),
+):
     if not file.filename:
         raise HTTPException(status_code=400, detail="File name is required.")
 
@@ -70,7 +75,17 @@ async def upload_comments(file: UploadFile = File(...)):
         _normalize_record(record) for record in selected_df.to_dict(orient="records")
     ]
 
-    upload_id = save_uploaded_comments(file.filename, normalized_rows)
+    try:
+        upload_id = save_uploaded_comments(file.filename, normalized_rows, owner_id)
+    except (PyMongoError, RuntimeError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Upload storage is unavailable. Check the MONGODB_URI and "
+                "MONGODB_DB_NAME settings in backend/.env."
+            ),
+        ) from exc
+
     return {
         "upload_id": upload_id,
         "total_comments": len(normalized_rows),

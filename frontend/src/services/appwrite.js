@@ -39,6 +39,12 @@ export const getCurrentUser = async () => {
   return account.get()
 }
 
+export const getAuthToken = async () => {
+  ensureConfigured()
+  const { jwt } = await account.createJWT()
+  return jwt
+}
+
 export const logoutUser = async () => {
   ensureConfigured()
   await account.deleteSession('current')

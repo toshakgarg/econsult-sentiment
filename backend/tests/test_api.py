@@ -4,12 +4,18 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from main import app
+from services.auth import get_current_user_id
 
 
 class ApiTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.client = TestClient(app)
+        app.dependency_overrides[get_current_user_id] = lambda: "test-user"
+
+    @classmethod
+    def tearDownClass(cls):
+        app.dependency_overrides.clear()
 
     def test_health_check(self):
         response = self.client.get("/health")
@@ -17,7 +23,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(response.json()["status"], "ok")
 
     @patch("routes.upload.save_uploaded_comments", return_value="upload-123")
-    def test_upload_csv_success(self, _save_mock):
+    def test_upload_csv_success(self, save_mock):
         csv_content = (
             "comment_id,stakeholder_type,provision_no,comment_text,date\n"
             "C001,Industry,Sec 1,This draft is clear and practical,2026-01-01\n"
@@ -33,6 +39,17 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(payload["upload_id"], "upload-123")
         self.assertEqual(payload["total_comments"], 1)
         self.assertEqual(len(payload["preview"]), 1)
+        save_mock.assert_called_once()
+        self.assertEqual(save_mock.call_args.args[2], "test-user")
+
+    def test_protected_history_requires_authentication(self):
+        dependency = app.dependency_overrides.pop(get_current_user_id)
+        try:
+            response = self.client.get("/api/history/")
+        finally:
+            app.dependency_overrides[get_current_user_id] = dependency
+
+        self.assertEqual(response.status_code, 401)
 
     def test_upload_missing_required_columns(self):
         csv_content = (
@@ -47,6 +64,26 @@ class ApiTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertIn("Missing required columns", response.json()["detail"])
+
+    @patch(
+        "routes.upload.save_uploaded_comments",
+        side_effect=RuntimeError("MongoDB connection string is missing"),
+    )
+    def test_upload_returns_service_unavailable_when_storage_is_unavailable(
+        self, _save_mock
+    ):
+        csv_content = (
+            "comment_id,stakeholder_type,provision_no,comment_text,date\n"
+            "C001,Industry,Sec 1,This draft is clear and practical,2026-01-01\n"
+        ).encode("utf-8")
+
+        response = self.client.post(
+            "/api/upload/",
+            files={"file": ("comments.csv", csv_content, "text/csv")},
+        )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertIn("Upload storage is unavailable", response.json()["detail"])
 
     def test_analysis_success_from_upload(self):
         uploaded_comments = [

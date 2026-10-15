@@ -41,7 +41,7 @@ describe('Home page upload flow', () => {
       preview: mockPreview,
     })
 
-    const { container } = render(<Home />)
+    const { container } = render(<Home user={{ $id: 'user-001' }} />)
     const fileInput = container.querySelector('input[type="file"]')
     expect(fileInput).not.toBeNull()
 
@@ -63,6 +63,6 @@ describe('Home page upload flow', () => {
     expect(screen.getByText('Preview (First 5 Rows)')).toBeInTheDocument()
     expect(screen.getByText('C001')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Proceed to Analysis' })).toBeInTheDocument()
-    expect(localStorage.getItem('lastUploadId')).toBe('upload-001')
+    expect(localStorage.getItem('lastUploadId:user-001')).toBe('upload-001')
   })
 })

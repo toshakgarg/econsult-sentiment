@@ -1,8 +1,15 @@
 import axios from 'axios'
+import { getAuthToken } from './appwrite'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
   timeout: 120000,
+})
+
+apiClient.interceptors.request.use(async (config) => {
+  const token = await getAuthToken()
+  config.headers.Authorization = `Bearer ${token}`
+  return config
 })
 
 export const uploadCommentsFile = async (file) => {

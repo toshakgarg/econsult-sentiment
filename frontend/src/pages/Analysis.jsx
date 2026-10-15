@@ -16,10 +16,12 @@ const SENTIMENT_COLORS = {
   neutral: '#64748b',
 }
 
-function Analysis() {
+function Analysis({ user }) {
   const location = useLocation()
   const [uploadId, setUploadId] = useState(
-    location.state?.uploadId || localStorage.getItem('lastUploadId') || '',
+    location.state?.uploadId ||
+      (user?.$id ? localStorage.getItem(`lastUploadId:${user.$id}`) : '') ||
+      '',
   )
   const [batch, setBatch] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
