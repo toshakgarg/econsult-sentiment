@@ -1,9 +1,39 @@
-node_modules/
-backend/venv/
-backend/.env
+# Dependencies and virtual environments
+**/node_modules/
+**/venv/
+**/venv_old/
+**/.venv/
+
+# Python caches and test artifacts
 __pycache__/
-*.pyc
-frontend/dist/
-frontend/dist-ssr/
-frontend/.env.local
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Frontend build output
+**/dist/
+**/dist-ssr/
+**/build/
+
+# Local environment files (keep safe templates)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local credentials and keys
+**/*firebase-admin*.json
+**/*firebase-service-account*.json
+**/*service-account*.json
+**/*service_account*.json
+**/*serviceAccount*.json
+*.pem
+*.key
+*.p12
+
+# Logs and operating-system files
+*.log
 .DS_Store

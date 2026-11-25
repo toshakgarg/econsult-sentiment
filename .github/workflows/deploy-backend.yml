@@ -1,7 +1,13 @@
-name: Deploy FastAPI Backend to Azure App Service
+name: Validate and deploy FastAPI backend
 
 on:
   push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend.yml"
+  pull_request:
     branches:
       - main
     paths:
@@ -12,27 +18,45 @@ permissions:
   contents: read
 
 jobs:
-  deploy-backend:
+  test-backend:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-
       - name: Install backend dependencies
+        working-directory: backend
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
+          pip install -r requirements.txt
+      - name: Check Python syntax
+        working-directory: backend
+        run: python -m compileall -q .
+      - name: Run backend tests
+        run: python -m unittest discover -s backend/tests -p 'test_*.py'
 
+  deploy-backend:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Azure deployment secrets
+        env:
+          APP_NAME: ${{ secrets.AZURE_BACKEND_APP_NAME }}
+          PUBLISH_PROFILE: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+        run: |
+          if [ -z "$APP_NAME" ]; then
+            echo "::error::AZURE_BACKEND_APP_NAME is required."
+            exit 1
+          fi
+          if [ -z "$PUBLISH_PROFILE" ]; then
+            echo "::error::AZURE_BACKEND_PUBLISH_PROFILE is required."
+            exit 1
+          fi
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_BACKEND_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
           package: backend
-          startup-command: "uvicorn main:app --host 0.0.0.0 --port 8000"
