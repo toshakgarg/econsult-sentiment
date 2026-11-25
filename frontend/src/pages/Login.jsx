@@ -1,40 +1,72 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BarChart3, Eye, EyeOff, LineChart, ShieldCheck } from 'lucide-react'
-import { loginWithEmail, registerUser } from '../services/appwrite'
+import { BarChart3, LineChart, ShieldCheck } from 'lucide-react'
+import {
+  getAuthErrorMessage,
+  loginWithEmail,
+  loginWithGoogle,
+  registerUser,
+  resetPassword,
+} from '../services/firebase'
 import heroIllustration from '../assets/images/hero-illustration.png'
 import logo from '../assets/images/logo.png'
 
 function Login({ onLogin }) {
   const navigate = useNavigate()
   const [isRegistering, setIsRegistering] = useState(false)
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleBrandClick = () => {
     navigate('/')
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const runAuthentication = async (authenticate) => {
     setError('')
+    setNotice('')
     setIsSubmitting(true)
     try {
-      const user = isRegistering
-        ? await registerUser(name, email, password)
-        : await loginWithEmail(email, password)
+      const user = await authenticate()
       onLogin(user)
       navigate('/home', { replace: true })
     } catch (err) {
-      setError(
-        err?.message ||
-          'Authentication failed. Verify your Appwrite configuration and credentials.',
-      )
+      setError(getAuthErrorMessage(err))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    await runAuthentication(() =>
+      isRegistering ? registerUser(email, password) : loginWithEmail(email, password),
+    )
+  }
+
+  const handleGoogleSignIn = () => runAuthentication(loginWithGoogle)
+
+  const handlePasswordReset = async () => {
+    setError('')
+    setNotice('')
+    if (!email.trim()) {
+      setError('Enter your email address first, then request a password reset.')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      await resetPassword(email.trim())
+      setNotice('If an account exists for this email, a password reset link will be sent.')
+    } catch (err) {
+      if (err?.code === 'auth/user-not-found') {
+        setNotice('If an account exists for this email, a password reset link will be sent.')
+      } else {
+        setError(getAuthErrorMessage(err))
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -129,86 +161,48 @@ function Login({ onLogin }) {
             </header>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-              {isRegistering ? (
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="mb-1 block text-xs font-bold uppercase tracking-widest text-outline"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    className="w-full rounded-none border-0 border-b-2 border-transparent bg-surface-container-low px-0 py-4 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0"
-                    placeholder="Your name"
-                    autoComplete="name"
-                    required
-                  />
-                </div>
-              ) : null}
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1 block text-xs font-bold uppercase tracking-widest text-outline"
-                >
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="w-full rounded-none border-0 border-b-2 border-transparent bg-surface-container-low px-0 py-4 text-on-surface placeholder:text-outline focus:border-primary focus:ring-0"
-                  placeholder="name@company.com"
-                  autoComplete="email"
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-1 block text-xs font-bold uppercase tracking-widest text-outline"
-                >
-                  Password
-                </label>
-                <div className="flex items-center border-b-2 border-transparent bg-surface-container-low focus-within:border-primary">
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    className="w-full border-0 bg-transparent px-0 py-4 text-on-surface placeholder:text-outline focus:ring-0"
-                    placeholder="Password"
-                    autoComplete={isRegistering ? 'new-password' : 'current-password'}
-                    minLength={isRegistering ? 8 : undefined}
-                    required
-                  />
-                  <button
-                    type="button"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    aria-pressed={showPassword}
-                    onClick={() => setShowPassword((isVisible) => !isVisible)}
-                    className="pr-2 text-outline hover:text-primary"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
               {error ? (
-                <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <div role="alert" className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                   {error}
                 </div>
               ) : null}
+              {notice ? (
+                <div role="status" className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                  {notice}
+                </div>
+              ) : null}
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-on-surface">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="w-full rounded-lg border border-outline-variant/40 bg-white px-4 py-3 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-on-surface">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete={isRegistering ? 'new-password' : 'current-password'}
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="w-full rounded-lg border border-outline-variant/40 bg-white px-4 py-3 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
 
               <button
                 type="submit"
@@ -225,6 +219,32 @@ function Login({ onLogin }) {
               </button>
             </form>
 
+            {!isRegistering ? (
+              <button
+                type="button"
+                onClick={handlePasswordReset}
+                disabled={isSubmitting}
+                className="mt-4 w-full text-sm font-semibold text-primary hover:underline disabled:opacity-70"
+              >
+                Forgot password?
+              </button>
+            ) : null}
+
+            <div className="my-6 flex items-center gap-4 text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+              <span className="h-px flex-1 bg-outline-variant/30" />
+              Or continue with
+              <span className="h-px flex-1 bg-outline-variant/30" />
+            </div>
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={isSubmitting}
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-outline-variant/40 bg-white px-6 py-3 font-semibold text-on-surface transition hover:bg-surface-container-low disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <span aria-hidden="true" className="text-lg font-bold text-primary">G</span>
+              Continue with Google
+            </button>
+
             <p className="mt-6 text-center text-sm text-on-surface-variant">
               {isRegistering ? 'Already have an account?' : "Don't have an account?"}{' '}
               <button
@@ -232,6 +252,7 @@ function Login({ onLogin }) {
                 onClick={() => {
                   setIsRegistering((isRegisteringMode) => !isRegisteringMode)
                   setError('')
+                  setNotice('')
                 }}
                 className="font-bold text-primary hover:underline"
               >

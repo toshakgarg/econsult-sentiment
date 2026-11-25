@@ -1,5 +1,6 @@
-from io import BytesIO
+import os
 from pathlib import Path
+from tempfile import SpooledTemporaryFile
 from typing import Any, Dict, List
 
 import pandas as pd
@@ -20,6 +21,9 @@ REQUIRED_COLUMNS = [
     "date",
 ]
 ALLOWED_EXTENSIONS = {".csv", ".xls", ".xlsx"}
+MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", "20")) * 1024 * 1024
+MAX_UPLOAD_ROWS = int(os.getenv("MAX_UPLOAD_ROWS", "5000"))
+MAX_FIELD_CHARS = int(os.getenv("MAX_FIELD_CHARS", "10000"))
 
 
 def _normalize_record(record: Dict[str, Any]) -> Dict[str, str]:
@@ -29,7 +33,7 @@ def _normalize_record(record: Dict[str, Any]) -> Dict[str, str]:
         if pd.isna(value):
             normalized[column] = ""
         else:
-            normalized[column] = str(value).strip()
+            normalized[column] = str(value).strip()[:MAX_FIELD_CHARS]
     return normalized
 
 
@@ -48,20 +52,47 @@ async def upload_comments(
             detail="Invalid file type. Upload a CSV, XLS or XLSX file.",
         )
 
-    raw_content = await file.read()
-    if not raw_content:
-        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
-
+    spooled = SpooledTemporaryFile(max_size=2 * 1024 * 1024, mode="w+b")
+    uploaded_bytes = 0
     try:
-        if extension == ".csv":
-            dataframe = pd.read_csv(BytesIO(raw_content))
-        else:
-            dataframe = pd.read_excel(BytesIO(raw_content))
-    except Exception as exc:
+        while True:
+            chunk = await file.read(1024 * 1024)
+            if not chunk:
+                break
+            uploaded_bytes += len(chunk)
+            if uploaded_bytes > MAX_UPLOAD_BYTES:
+                spooled.close()
+                raise HTTPException(
+                    status_code=413,
+                    detail=f"Uploaded file exceeds the maximum size of {MAX_UPLOAD_BYTES // (1024 * 1024)} MB.",
+                )
+            spooled.write(chunk)
+        if uploaded_bytes == 0:
+            spooled.close()
+            raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+        spooled.seek(0)
+        try:
+            if extension == ".csv":
+                dataframe = pd.read_csv(spooled)
+            else:
+                dataframe = pd.read_excel(spooled)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="Unable to parse uploaded file.",
+            ) from exc
+    finally:
+        if not spooled.closed:
+            spooled.close()
+
+    if len(dataframe) > MAX_UPLOAD_ROWS:
         raise HTTPException(
-            status_code=400,
-            detail=f"Unable to parse uploaded file: {exc}",
-        ) from exc
+            status_code=413,
+            detail=f"Uploaded file exceeds the maximum row count of {MAX_UPLOAD_ROWS}.",
+        )
+
+    if dataframe.empty:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
     missing_columns = [column for column in REQUIRED_COLUMNS if column not in dataframe]
     if missing_columns:

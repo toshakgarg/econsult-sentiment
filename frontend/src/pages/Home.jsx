@@ -49,8 +49,8 @@ function Home({ user }) {
       const response = await uploadCommentsFile(selectedFile)
       setUploadId(response.upload_id)
       setPreviewRows(response.preview || [])
-      if (user?.$id) {
-        localStorage.setItem(`lastUploadId:${user.$id}`, response.upload_id)
+      if (user?.id) {
+        window.localStorage.setItem(`lastUploadId:${user.id}`, response.upload_id)
       }
     } catch (err) {
       setError(err?.response?.data?.detail || err?.message || 'Upload failed.')

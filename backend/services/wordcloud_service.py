@@ -4,13 +4,17 @@ from typing import Iterable
 
 import nltk
 from nltk.corpus import stopwords
-from wordcloud import STOPWORDS, WordCloud
-
-
-nltk.download("stopwords", quiet=True)
 
 
 def generate_word_cloud_base64(comments: Iterable[str]) -> str:
+    try:
+        from wordcloud import STOPWORDS, WordCloud
+    except (ImportError, OSError) as exc:
+        raise RuntimeError(
+            "Word cloud dependency is unavailable in this runtime."
+        ) from exc
+
+    nltk.download("stopwords", quiet=True)
     words = [comment.strip() for comment in comments if comment and comment.strip()]
     if not words:
         raise ValueError("Cannot generate a word cloud from empty comments.")

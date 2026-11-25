@@ -1,7 +1,7 @@
 import { Suspense, cloneElement, lazy, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
-import { getCurrentUser, logoutUser } from './services/appwrite'
+import { logoutUser, subscribeToAuthChanges } from './services/firebase'
 
 const Landing = lazy(() => import('./pages/Landing'))
 const About = lazy(() => import('./pages/About'))
@@ -37,27 +37,30 @@ function PublicLayout({ children }) {
 function App() {
   const [user, setUser] = useState(null)
   const [isAuthLoading, setIsAuthLoading] = useState(true)
+  const [authError, setAuthError] = useState('')
 
   useEffect(() => {
-    const bootstrapAuth = async () => {
-      try {
-        const currentUser = await getCurrentUser()
+    return subscribeToAuthChanges(
+      (currentUser) => {
         setUser(currentUser)
-      } catch {
-        setUser(null)
-      } finally {
         setIsAuthLoading(false)
-      }
-    }
-
-    bootstrapAuth()
+      },
+      (error) => {
+        console.error('Unable to restore the Firebase authentication session.', error)
+        setAuthError('Unable to restore your sign-in session. Reload the page to try again.')
+        setIsAuthLoading(false)
+      },
+    )
   }, [])
 
   const handleLogout = async () => {
     await logoutUser()
-    Object.keys(localStorage)
-      .filter((key) => key.startsWith('lastUploadId:'))
-      .forEach((key) => localStorage.removeItem(key))
+    for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+      const key = window.localStorage.key(index)
+      if (key?.startsWith('lastUploadId:')) {
+        window.localStorage.removeItem(key)
+      }
+    }
     setUser(null)
   }
 
@@ -67,6 +70,16 @@ function App() {
         <div className="rounded-lg border border-outline-variant/20 bg-white px-6 py-4 text-sm text-on-surface-variant shadow-sm">
           Loading application...
         </div>
+      </div>
+    )
+  }
+
+  if (authError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface px-4">
+        <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-700">
+          {authError}
+        </p>
       </div>
     )
   }

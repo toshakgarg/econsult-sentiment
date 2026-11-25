@@ -20,7 +20,7 @@ function Analysis({ user }) {
   const location = useLocation()
   const [uploadId, setUploadId] = useState(
     location.state?.uploadId ||
-      (user?.$id ? localStorage.getItem(`lastUploadId:${user.$id}`) : '') ||
+      (user?.id ? localStorage.getItem(`lastUploadId:${user.id}`) : '') ||
       '',
   )
   const [batch, setBatch] = useState(null)
