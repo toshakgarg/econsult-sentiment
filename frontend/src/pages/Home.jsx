@@ -4,7 +4,7 @@ import { CheckCircle2, CloudUpload, FileSpreadsheet, Info } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { uploadCommentsFile } from '../services/api'
 
-function Home({ user }) {
+function Home() {
   const navigate = useNavigate()
   const inputRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
@@ -49,9 +49,7 @@ function Home({ user }) {
       const response = await uploadCommentsFile(selectedFile)
       setUploadId(response.upload_id)
       setPreviewRows(response.preview || [])
-      if (user?.$id) {
-        localStorage.setItem(`lastUploadId:${user.$id}`, response.upload_id)
-      }
+      localStorage.setItem('lastUploadId', response.upload_id)
     } catch (err) {
       setError(err?.response?.data?.detail || err?.message || 'Upload failed.')
     } finally {

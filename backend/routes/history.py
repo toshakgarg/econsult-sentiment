@@ -1,11 +1,10 @@
 from datetime import datetime, timezone
 from io import BytesIO
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import StreamingResponse
 
 from services.mongodb_service import get_analysis_batch_by_batch_id, get_analysis_batches
-from services.auth import get_current_user_id
 from utils.export import generate_excel_report, generate_pdf_report
 
 
@@ -13,26 +12,21 @@ router = APIRouter()
 
 
 @router.get("/")
-def get_history(
-    limit: int = Query(default=25, ge=1, le=100),
-    owner_id: str = Depends(get_current_user_id),
-):
-    return {"items": get_analysis_batches(owner_id=owner_id, limit=limit)}
+def get_history(limit: int = Query(default=25, ge=1, le=100)):
+    return {"items": get_analysis_batches(limit=limit)}
 
 
 @router.get("/{batch_id}")
-def get_history_batch(batch_id: str, owner_id: str = Depends(get_current_user_id)):
-    batch = get_analysis_batch_by_batch_id(batch_id, owner_id)
+def get_history_batch(batch_id: str):
+    batch = get_analysis_batch_by_batch_id(batch_id)
     if not batch:
         raise HTTPException(status_code=404, detail=f"Batch not found: {batch_id}")
     return batch
 
 
 @router.get("/{batch_id}/export/excel")
-def export_batch_excel(
-    batch_id: str, owner_id: str = Depends(get_current_user_id)
-):
-    batch = get_analysis_batch_by_batch_id(batch_id, owner_id)
+def export_batch_excel(batch_id: str):
+    batch = get_analysis_batch_by_batch_id(batch_id)
     if not batch:
         raise HTTPException(status_code=404, detail=f"Batch not found: {batch_id}")
 
@@ -49,8 +43,8 @@ def export_batch_excel(
 
 
 @router.get("/{batch_id}/export/pdf")
-def export_batch_pdf(batch_id: str, owner_id: str = Depends(get_current_user_id)):
-    batch = get_analysis_batch_by_batch_id(batch_id, owner_id)
+def export_batch_pdf(batch_id: str):
+    batch = get_analysis_batch_by_batch_id(batch_id)
     if not batch:
         raise HTTPException(status_code=404, detail=f"Batch not found: {batch_id}")
 

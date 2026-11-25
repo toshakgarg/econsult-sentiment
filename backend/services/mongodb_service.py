@@ -39,12 +39,11 @@ def _serialize_doc(document: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def save_uploaded_comments(
-    source_file_name: str, comments: List[Dict[str, Any]], owner_id: str
+    source_file_name: str, comments: List[Dict[str, Any]]
 ) -> str:
     uploads_collection = get_database()["uploaded_comments"]
     upload_document = {
         "source_file_name": source_file_name,
-        "owner_id": owner_id,
         "created_at": datetime.now(timezone.utc),
         "comments": comments,
     }
@@ -52,12 +51,10 @@ def save_uploaded_comments(
     return str(insert_result.inserted_id)
 
 
-def get_uploaded_comments(upload_id: str, owner_id: str) -> Optional[List[Dict[str, Any]]]:
+def get_uploaded_comments(upload_id: str) -> Optional[List[Dict[str, Any]]]:
     uploads_collection = get_database()["uploaded_comments"]
     try:
-        document = uploads_collection.find_one(
-            {"_id": ObjectId(upload_id), "owner_id": owner_id}
-        )
+        document = uploads_collection.find_one({"_id": ObjectId(upload_id)})
     except InvalidId as exc:
         raise RuntimeError(f"Invalid upload id format: {upload_id}") from exc
     if not document:
@@ -65,30 +62,21 @@ def get_uploaded_comments(upload_id: str, owner_id: str) -> Optional[List[Dict[s
     return document.get("comments", [])
 
 
-def save_analysis_batch(batch_data: Dict[str, Any], owner_id: str) -> str:
+def save_analysis_batch(batch_data: Dict[str, Any]) -> str:
     analysis_collection = get_database()["analysis_batches"]
-    batch_data["owner_id"] = owner_id
     analysis_collection.insert_one(batch_data)
     return batch_data["batch_id"]
 
 
-def get_analysis_batches(owner_id: str, limit: int = 25) -> List[Dict[str, Any]]:
+def get_analysis_batches(limit: int = 25) -> List[Dict[str, Any]]:
     analysis_collection = get_database()["analysis_batches"]
-    cursor = (
-        analysis_collection.find({"owner_id": owner_id})
-        .sort("created_at", -1)
-        .limit(limit)
-    )
+    cursor = analysis_collection.find().sort("created_at", -1).limit(limit)
     return [_serialize_doc(doc) for doc in cursor]
 
 
-def get_analysis_batch_by_batch_id(
-    batch_id: str, owner_id: str
-) -> Optional[Dict[str, Any]]:
+def get_analysis_batch_by_batch_id(batch_id: str) -> Optional[Dict[str, Any]]:
     analysis_collection = get_database()["analysis_batches"]
-    document = analysis_collection.find_one(
-        {"batch_id": batch_id, "owner_id": owner_id}
-    )
+    document = analysis_collection.find_one({"batch_id": batch_id})
     if not document:
         return None
     return _serialize_doc(document)
