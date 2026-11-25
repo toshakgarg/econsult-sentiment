@@ -290,8 +290,11 @@ service-account JSON belongs in App Service settings, not GitHub Actions.
 4. Open **Project settings > Service accounts** and generate a private key only
    when needed. Store it securely; never commit or paste it into frontend or
    workflow source. The service account needs permission to read Firebase Auth
-   users (`firebaseauth.users.get`) for revocation/disabled-account checks;
-   grant the least-privilege Firebase Authentication Admin role or equivalent.
+users (`firebaseauth.users.get`) for revocation/disabled-account checks.
+In **Google Cloud Console > IAM & Admin > IAM** for project
+`sentrix-75081`, grant the service account the Firebase Authentication Admin
+role (`roles/firebaseauth.admin`) or a custom role containing
+`firebaseauth.users.get`.
 
 ### MongoDB Atlas network access
 
