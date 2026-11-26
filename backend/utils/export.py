@@ -1,5 +1,7 @@
 from datetime import datetime
 from io import BytesIO
+import os
+from pathlib import Path
 from typing import Any, Dict, Iterable
 
 from openpyxl import Workbook
@@ -7,6 +9,15 @@ from openpyxl.styles import Alignment, Font
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import simpleSplit
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+
+def _neutralize_excel_text(value: Any) -> str:
+    text = "" if value is None else str(value)
+    if text.startswith(("=", "+", "-", "@", "\t", "\r")):
+        return "'" + text
+    return text
 
 
 def _safe_get_sentiment_count(batch: Dict[str, Any], key: str) -> int:
@@ -67,18 +78,18 @@ def generate_excel_report(batch: Dict[str, Any]) -> bytes:
         confidence = result.get("sentiment_confidence", {})
         details_sheet.append(
             [
-                result.get("comment_id", ""),
-                result.get("stakeholder_type", ""),
-                result.get("provision_no", ""),
-                result.get("date", ""),
-                result.get("original_comment", ""),
-                result.get("cleaned_comment", ""),
+                _neutralize_excel_text(result.get("comment_id", "")),
+                _neutralize_excel_text(result.get("stakeholder_type", "")),
+                _neutralize_excel_text(result.get("provision_no", "")),
+                _neutralize_excel_text(result.get("date", "")),
+                _neutralize_excel_text(result.get("original_comment", "")),
+                _neutralize_excel_text(result.get("cleaned_comment", "")),
                 result.get("language", ""),
-                result.get("sentiment", ""),
+                _neutralize_excel_text(result.get("sentiment", "")),
                 float(confidence.get("positive", 0.0)),
                 float(confidence.get("neutral", 0.0)),
                 float(confidence.get("negative", 0.0)),
-                result.get("summary", ""),
+                _neutralize_excel_text(result.get("summary", "")),
             ]
         )
 
@@ -101,12 +112,35 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
     batch_id = str(batch.get("batch_id", ""))
 
     buffer = BytesIO()
+    configured_font = os.getenv("PDF_UNICODE_FONT", "").strip()
+    candidates = [
+        configured_font,
+        r"C:\Windows\Fonts\DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
+    ]
+    try:
+        from matplotlib import get_data_path
+
+        candidates.append(
+            str(Path(get_data_path()) / "fonts" / "ttf" / "DejaVuSans.ttf")
+        )
+    except ImportError:
+        pass
+    font_path = next((Path(path) for path in candidates if path and Path(path).is_file()), None)
+    if font_path is None:
+        raise RuntimeError(
+            "No Unicode PDF font found. Set PDF_UNICODE_FONT to a redistributable TTF/OTF path."
+        )
+    pdfmetrics.registerFont(TTFont("SentrixUnicode", str(font_path)))
+    unicode_font = "SentrixUnicode"
+    unicode_bold = "SentrixUnicode"
     pdf = canvas.Canvas(buffer, pagesize=A4)
 
     def start_page() -> float:
-        pdf.setFont("Helvetica-Bold", 14)
+        pdf.setFont(unicode_bold, 14)
         pdf.drawString(margin, page_height - margin, "Sentrix Analysis Report")
-        pdf.setFont("Helvetica", 9)
+        pdf.setFont(unicode_font, 9)
         pdf.drawRightString(
             page_width - margin, page_height - margin, f"Batch ID: {batch_id}"
         )
@@ -119,13 +153,13 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
         return page_height - margin - 24
 
     def draw_wrapped_block(
-        y_pos: float, label: str, value: Any, value_font: str = "Helvetica"
+        y_pos: float, label: str, value: Any, value_font: str = unicode_font
     ) -> float:
         value_text = str(value or "")
         label_text = f"{label}: "
 
-        pdf.setFont("Helvetica-Bold", 10)
-        label_width = pdf.stringWidth(label_text, "Helvetica-Bold", 10)
+        pdf.setFont(unicode_bold, 10)
+        label_width = pdf.stringWidth(label_text, unicode_bold, 10)
         value_width = max_width - label_width
         wrapped_lines = simpleSplit(value_text, value_font, 10, value_width)
         if not wrapped_lines:
@@ -135,7 +169,7 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
             pdf.showPage()
             y_pos = start_page()
 
-        pdf.setFont("Helvetica-Bold", 10)
+        pdf.setFont(unicode_bold, 10)
         pdf.drawString(margin, y_pos, label_text)
         pdf.setFont(value_font, 10)
         pdf.drawString(margin + label_width, y_pos, wrapped_lines[0])
@@ -167,7 +201,7 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
     if y < margin + 30:
         pdf.showPage()
         y = start_page()
-    pdf.setFont("Helvetica-Bold", 12)
+    pdf.setFont(unicode_bold, 12)
     pdf.drawString(margin, y, "Comment-wise Analysis")
     y -= line_height
 
@@ -177,7 +211,7 @@ def generate_pdf_report(batch: Dict[str, Any]) -> bytes:
             pdf.showPage()
             y = start_page()
 
-        pdf.setFont("Helvetica-Bold", 10)
+        pdf.setFont(unicode_bold, 10)
         pdf.drawString(margin, y, f"{index}. Comment ID: {result.get('comment_id', '')}")
         y -= line_height
 

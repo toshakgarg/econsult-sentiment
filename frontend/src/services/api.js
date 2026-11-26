@@ -1,8 +1,15 @@
 import axios from 'axios'
+import { getAuthToken } from './firebase'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
   timeout: 120000,
+})
+
+apiClient.interceptors.request.use(async (config) => {
+  const token = await getAuthToken()
+  config.headers.Authorization = `Bearer ${token}`
+  return config
 })
 
 export const uploadCommentsFile = async (file) => {
@@ -26,6 +33,11 @@ export const getAnalysisHistory = async (limit = 25) => {
 
 export const getAnalysisBatch = async (batchId) => {
   const response = await apiClient.get(`/history/${batchId}`)
+  return response.data
+}
+
+export const getAnalysisProgress = async (batchId) => {
+  const response = await apiClient.get(`/analysis/progress/${batchId}`)
   return response.data
 }
 

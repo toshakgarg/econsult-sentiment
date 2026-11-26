@@ -1,9 +1,11 @@
 import os
+import random
+import time
 
 import requests
 
 
-DEFAULT_MODEL_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+DEFAULT_MODEL_URL = "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
 
 
 def _get_huggingface_config() -> tuple[str, str]:
@@ -39,13 +41,43 @@ def generate_summary(text: str, min_length: int = 20, max_length: int = 80) -> s
         "options": {"wait_for_model": True},
     }
 
-    response = requests.post(model_url, headers=headers, json=payload, timeout=60)
-    if response.status_code != 200:
-        raise RuntimeError(
-            f"Hugging Face summarization failed ({response.status_code}): {response.text}"
-        )
+    max_attempts = int(os.getenv("HF_MAX_ATTEMPTS", "4"))
+    for attempt in range(max_attempts):
+        try:
+            response = requests.post(model_url, headers=headers, json=payload, timeout=60)
+        except requests.Timeout as exc:
+            if attempt == max_attempts - 1:
+                raise RuntimeError("Hugging Face summarization timed out.") from exc
+        except requests.RequestException as exc:
+            if attempt == max_attempts - 1:
+                raise RuntimeError("Hugging Face summarization service is unavailable.") from exc
+        else:
+            if response.status_code == 200:
+                break
+            if response.status_code in (429,) or 500 <= response.status_code < 600:
+                if attempt == max_attempts - 1:
+                    raise RuntimeError(
+                        f"Hugging Face summarization exhausted retries ({response.status_code})."
+                    )
+            else:
+                raise RuntimeError(
+                    f"Hugging Face summarization failed ({response.status_code})."
+                )
+        delay = min(8.0, 0.5 * (2 ** attempt)) + random.uniform(0, 0.25)
+        retry_after = response.headers.get("Retry-After") if 'response' in locals() else None
+        if retry_after:
+            try:
+                delay = min(60.0, float(retry_after))
+            except ValueError:
+                pass
+        time.sleep(delay)
+    else:
+        raise RuntimeError("Hugging Face summarization exhausted retries.")
 
-    data = response.json()
+    try:
+        data = response.json()
+    except ValueError as exc:
+        raise RuntimeError("Hugging Face returned malformed JSON.") from exc
     if isinstance(data, dict) and data.get("error"):
         raise RuntimeError(f"Hugging Face summarization error: {data['error']}")
 

@@ -23,6 +23,8 @@ class AnalysisResult(BaseModel):
     sentiment: Literal["positive", "negative", "neutral"]
     sentiment_confidence: Dict[str, float] = Field(default_factory=dict)
     summary: str
+    processing_status: Literal["success", "partial", "failed"] = "success"
+    processing_error: str = ""
 
 
 class WordCloudResponse(BaseModel):
